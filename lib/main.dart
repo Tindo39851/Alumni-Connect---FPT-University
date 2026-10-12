@@ -5,6 +5,7 @@ import 'package:alumni_connect/core/router/app_router.dart';
 import 'package:alumni_connect/features/feed/presentation/cubit/feed_cubit.dart';
 import 'package:alumni_connect/features/directory/presentation/cubit/directory_cubit.dart';
 import 'package:alumni_connect/features/profile/presentation/cubit/profile_cubit.dart';
+import 'package:alumni_connect/features/jobs/presentation/cubit/jobs_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,6 +27,9 @@ class FptAlumniConnectApp extends StatelessWidget {
         ),
         BlocProvider<ProfileCubit>(
           create: (_) => ProfileCubit()..loadProfile(),
+        ),
+        BlocProvider<JobsCubit>(
+          create: (_) => JobsCubit()..loadJobs(),
         ),
       ],
       child: MaterialApp.router(
