@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Dashboard.md",
+                "file": "04_Dev_Guide/Environment-Setup.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Dashboard"
+              "title": "Environment-Setup"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Dashboard.md",
+                "file": "04_Dev_Guide/Environment-Setup.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Dashboard.md",
+                "file": "04_Dev_Guide/Environment-Setup.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Dashboard.md",
+                "file": "04_Dev_Guide/Environment-Setup.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -189,5 +189,14 @@
     }
   },
   "active": "4e2b3062db1d1b81",
-  "lastOpenFiles": []
+  "lastOpenFiles": [
+    "03_UI_UX_Design/Design-System-FPT.md",
+    "02_Features/Feed-and-Stories.md",
+    "02_Features/AI-Assistant.md",
+    "01_Architecture/Project-Structure.md",
+    "01_Architecture/Navigation-GoRouter.md",
+    "01_Architecture/Mobile-Architecture.md",
+    "00_QuickNotes/Quick-Notes.md",
+    "Dashboard.md"
+  ]
 }
