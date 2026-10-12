@@ -7,6 +7,8 @@ import 'package:alumni_connect/features/feed/presentation/screens/create_post_sc
 import 'package:alumni_connect/features/directory/presentation/screens/directory_screen.dart';
 import 'package:alumni_connect/features/directory/presentation/screens/alumni_profile_screen.dart';
 import 'package:alumni_connect/features/mentorship/presentation/screens/booking_screen.dart';
+import 'package:alumni_connect/features/profile/presentation/screens/user_profile_screen.dart';
+import 'package:alumni_connect/features/profile/presentation/screens/edit_profile_screen.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -60,14 +62,12 @@ class AppRouter {
               ),
             ],
           ),
-          // Tab 5: Profile
+          // Tab 5: Profile (Student Profile Tab)
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/profile',
-                builder: (context, state) => const Scaffold(
-                  body: Center(child: Text('Hồ sơ Sinh viên (Tab 5)')),
-                ),
+                builder: (context, state) => const UserProfileScreen(),
               ),
             ],
           ),
@@ -87,6 +87,11 @@ class AppRouter {
         path: '/create-post',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const CreatePostScreen(),
+      ),
+      GoRoute(
+        path: '/edit-profile',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const EditProfileScreen(),
       ),
       GoRoute(
         path: '/alumni-profile/:id',
