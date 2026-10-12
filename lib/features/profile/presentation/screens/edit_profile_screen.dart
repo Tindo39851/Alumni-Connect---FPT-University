@@ -253,7 +253,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               items: _campusOptions.map((c) {
                 return DropdownMenuItem(value: c, child: Text(c));
-              }).toList>,
+              }).toList(),
               onChanged: (val) {
                 if (val != null) setState(() => _selectedCampus = val);
               },
