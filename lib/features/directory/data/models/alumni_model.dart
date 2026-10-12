@@ -34,4 +34,45 @@ class AlumniModel {
     required this.skills,
     required this.bio,
   });
+
+  factory AlumniModel.fromJson(Map<String, dynamic> json) {
+    return AlumniModel(
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      mssv: json['mssv'] as String? ?? '',
+      cohort: json['cohort'] as String? ?? '',
+      major: json['major'] as String? ?? '',
+      campus: json['campus'] as String? ?? 'Toàn quốc',
+      currentRole: json['currentRole'] as String? ?? '',
+      company: json['company'] as String? ?? '',
+      avatarUrl: json['avatarUrl'] as String? ?? '',
+      isVerified: json['isVerified'] as bool? ?? true,
+      isAvailableForMentoring: json['isAvailableForMentoring'] as bool? ?? true,
+      rating: (json['rating'] as num?)?.toDouble() ?? 5.0,
+      reviewsCount: json['reviewsCount'] as int? ?? 0,
+      completedSessions: json['completedSessions'] as int? ?? 0,
+      skills: (json['skills'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+      bio: json['bio'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'mssv': mssv,
+        'cohort': cohort,
+        'major': major,
+        'campus': campus,
+        'currentRole': currentRole,
+        'company': company,
+        'avatarUrl': avatarUrl,
+        'isVerified': isVerified,
+        'isAvailableForMentoring': isAvailableForMentoring,
+        'rating': rating,
+        'reviewsCount': reviewsCount,
+        'completedSessions': completedSessions,
+        'skills': skills,
+        'bio': bio,
+      };
 }
+

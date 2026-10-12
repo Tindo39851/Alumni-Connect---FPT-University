@@ -41,7 +41,37 @@ class CommentItem {
     this.replies = const [],
   });
 
-  CommentItem copyWith({
+  factory CommentItem.fromJson(Map<String, dynamic> json) {
+    return CommentItem(
+      id: json['id'] as String? ?? '',
+      authorName: json['authorName'] as String? ?? '',
+      authorRole: json['authorRole'] as String? ?? '',
+      authorAvatar: json['authorAvatar'] as String? ?? '',
+      timeAgo: json['timeAgo'] as String? ?? '',
+      content: json['content'] as String? ?? '',
+      likes: json['likes'] as int? ?? 0,
+      isLiked: json['isLiked'] as bool? ?? false,
+      isAuthor: json['isAuthor'] as bool? ?? false,
+      replies: (json['replies'] as List<dynamic>?)
+              ?.map((e) => CommentItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'authorName': authorName,
+        'authorRole': authorRole,
+        'authorAvatar': authorAvatar,
+        'timeAgo': timeAgo,
+        'content': content,
+        'likes': likes,
+        'isLiked': isLiked,
+        'isAuthor': isAuthor,
+        'replies': replies.map((e) => e.toJson()).toList(),
+      };
+
     String? id,
     String? authorName,
     String? authorRole,
@@ -122,6 +152,67 @@ class PostItem {
     this.companyName,
     this.commentList = const [],
   });
+
+  factory PostItem.fromJson(Map<String, dynamic> json) {
+    return PostItem(
+      id: json['id'] as String? ?? '',
+      authorName: json['authorName'] as String? ?? '',
+      authorRole: json['authorRole'] as String? ?? '',
+      authorAvatar: json['authorAvatar'] as String? ?? '',
+      timeAgo: json['timeAgo'] as String? ?? '',
+      isVerified: json['isVerified'] as bool? ?? true,
+      title: json['title'] as String? ?? '',
+      content: json['content'] as String? ?? '',
+      attachmentTitle: json['attachmentTitle'] as String?,
+      attachmentSubtitle: json['attachmentSubtitle'] as String?,
+      attachmentImageUrl: json['attachmentImageUrl'] as String?,
+      campus: json['campus'] as String? ?? 'Toàn quốc',
+      category: json['category'] as String? ?? 'Chia sẻ kinh nghiệm',
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+      likes: json['likes'] as int? ?? 0,
+      comments: json['comments'] as int? ?? 0,
+      shares: json['shares'] as int? ?? 0,
+      isLiked: json['isLiked'] as bool? ?? false,
+      isSaved: json['isSaved'] as bool? ?? false,
+      isJobPost: json['isJobPost'] as bool? ?? false,
+      jobTitle: json['jobTitle'] as String?,
+      jobSalary: json['jobSalary'] as String?,
+      jobPerks: json['jobPerks'] as String?,
+      companyName: json['companyName'] as String?,
+      commentList: (json['commentList'] as List<dynamic>?)
+              ?.map((e) => CommentItem.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'authorName': authorName,
+        'authorRole': authorRole,
+        'authorAvatar': authorAvatar,
+        'timeAgo': timeAgo,
+        'isVerified': isVerified,
+        'title': title,
+        'content': content,
+        'attachmentTitle': attachmentTitle,
+        'attachmentSubtitle': attachmentSubtitle,
+        'attachmentImageUrl': attachmentImageUrl,
+        'campus': campus,
+        'category': category,
+        'tags': tags,
+        'likes': likes,
+        'comments': comments,
+        'shares': shares,
+        'isLiked': isLiked,
+        'isSaved': isSaved,
+        'isJobPost': isJobPost,
+        'jobTitle': jobTitle,
+        'jobSalary': jobSalary,
+        'jobPerks': jobPerks,
+        'companyName': companyName,
+        'commentList': commentList.map((e) => e.toJson()).toList(),
+      };
 
   PostItem copyWith({
     String? id,

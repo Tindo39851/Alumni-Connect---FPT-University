@@ -39,6 +39,50 @@ class JobModel {
     this.isSaved = false,
   });
 
+  factory JobModel.fromJson(Map<String, dynamic> json) {
+    return JobModel(
+      id: json['id'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      companyName: json['companyName'] as String? ?? '',
+      companyLogo: json['companyLogo'] as String? ?? '',
+      location: json['location'] as String? ?? '',
+      salary: json['salary'] as String? ?? '',
+      jobType: json['jobType'] as String? ?? 'Full-time',
+      experienceLevel: json['experienceLevel'] as String? ?? 'Fresher',
+      hasReferral: json['hasReferral'] as bool? ?? true,
+      referralAlumniName: json['referralAlumniName'] as String? ?? '',
+      referralAlumniRole: json['referralAlumniRole'] as String? ?? '',
+      referralAlumniAvatar: json['referralAlumniAvatar'] as String? ?? '',
+      postedTime: json['postedTime'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      requirements: (json['requirements'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+      benefits: (json['benefits'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+      tags: (json['tags'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? const [],
+      isSaved: json['isSaved'] as bool? ?? false,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'companyName': companyName,
+        'companyLogo': companyLogo,
+        'location': location,
+        'salary': salary,
+        'jobType': jobType,
+        'experienceLevel': experienceLevel,
+        'hasReferral': hasReferral,
+        'referralAlumniName': referralAlumniName,
+        'referralAlumniRole': referralAlumniRole,
+        'referralAlumniAvatar': referralAlumniAvatar,
+        'postedTime': postedTime,
+        'description': description,
+        'requirements': requirements,
+        'benefits': benefits,
+        'tags': tags,
+        'isSaved': isSaved,
+      };
+
   JobModel copyWith({
     String? id,
     String? title,

@@ -46,7 +46,13 @@ class PostCardWidget extends StatelessWidget {
                   children: [
                     CircleAvatar(
                       radius: 20,
+                      backgroundColor: AppColors.primary.withOpacity(0.15),
                       backgroundImage: NetworkImage(post.authorAvatar),
+                      onBackgroundImageError: (_, __) {},
+                      child: Text(
+                        post.authorName.isNotEmpty ? post.authorName[0] : 'U',
+                        style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(

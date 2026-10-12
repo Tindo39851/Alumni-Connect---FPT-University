@@ -153,142 +153,149 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is FeedLoaded) {
             final displayPosts = state.filteredPosts;
 
-            return ListView(
-              padding: const EdgeInsets.only(top: 12, bottom: 80),
-              children: [
-                // 1. Stories Carousel (Ẩn khi đang search để tập trung kết quả)
-                if (!_isSearching) ...[
-                  StoriesCarouselWidget(stories: state.stories),
-                  const SizedBox(height: 8),
+            return RefreshIndicator(
+              color: AppColors.fptOrange,
+              onRefresh: () async {
+                context.read<FeedCubit>().loadFeed();
+              },
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.only(top: 12, bottom: 80),
+                children: [
+                  // 1. Stories Carousel (Ẩn khi đang search để tập trung kết quả)
+                  if (!_isSearching) ...[
+                    StoriesCarouselWidget(stories: state.stories),
+                    const SizedBox(height: 8),
 
-                  // 2. Quick Create Post Box
-                  GestureDetector(
-                    onTap: () => context.push('/create-post'),
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.border),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              const CircleAvatar(
-                                radius: 18,
-                                backgroundImage: NetworkImage(
-                                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFF1F5F9),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Text(
-                                    'Chia sẻ kinh nghiệm hoặc tin tuyển dụng...',
-                                    style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+                    // 2. Quick Create Post Box
+                    GestureDetector(
+                      onTap: () => context.push('/create-post'),
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                const CircleAvatar(
+                                  radius: 18,
+                                  backgroundImage: NetworkImage(
+                                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              _buildQuickAction(Icons.photo_camera_outlined, 'Ảnh/Video', Colors.green),
-                              _buildQuickAction(Icons.work_outline, 'Referral', AppColors.fptBlue),
-                              _buildQuickAction(Icons.help_outline, 'Hỏi Mentor', AppColors.fptOrange),
-                            ],
-                          ),
-                        ],
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFF1F5F9),
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: const Text(
+                                      'Chia sẻ kinh nghiệm hoặc tin tuyển dụng...',
+                                      style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                _buildQuickAction(Icons.photo_camera_outlined, 'Ảnh/Video', Colors.green),
+                                _buildQuickAction(Icons.work_outline, 'Referral', AppColors.fptBlue),
+                                _buildQuickAction(Icons.help_outline, 'Hỏi Mentor', AppColors.fptOrange),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 14),
+                    const SizedBox(height: 14),
 
-                  // 3. Category Filter Chips
-                  SizedBox(
-                    height: 38,
-                    child: ListView.separated(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: categories.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 8),
-                      itemBuilder: (context, index) {
-                        final cat = categories[index];
-                        final isActive = state.selectedCategory == cat;
-                        return GestureDetector(
-                          onTap: () => context.read<FeedCubit>().selectCategory(cat),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: isActive ? AppColors.fptOrange : Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: isActive ? AppColors.fptOrange : AppColors.border,
+                    // 3. Category Filter Chips
+                    SizedBox(
+                      height: 38,
+                      child: ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: categories.length,
+                        separatorBuilder: (_, __) => const SizedBox(width: 8),
+                        itemBuilder: (context, index) {
+                          final cat = categories[index];
+                          final isActive = state.selectedCategory == cat;
+                          return GestureDetector(
+                            onTap: () => context.read<FeedCubit>().selectCategory(cat),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              decoration: BoxDecoration(
+                                color: isActive ? AppColors.fptOrange : Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: isActive ? AppColors.fptOrange : AppColors.border,
+                                ),
+                              ),
+                              child: Text(
+                                cat,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
+                                  color: isActive ? Colors.white : AppColors.textSecondary,
+                                ),
                               ),
                             ),
-                            child: Text(
-                              cat,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-                                color: isActive ? Colors.white : AppColors.textSecondary,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                ] else ...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: Text(
-                      'Kết quả tìm kiếm cho "${state.searchQuery}" (${displayPosts.length})',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textSecondary,
+                          );
+                        },
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 8),
+                  ] else ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Text(
+                        'Kết quả tìm kiếm cho "${state.searchQuery}" (${displayPosts.length})',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  // 4. Feed Posts List
+                  if (displayPosts.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.all(40),
+                      child: Center(
+                        child: Column(
+                          children: const [
+                            Icon(Icons.search_off, size: 48, color: AppColors.textMuted),
+                            SizedBox(height: 12),
+                            Text(
+                              'Không tìm thấy bài viết nào phù hợp',
+                              style: TextStyle(color: AppColors.textSecondary),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  else
+                    ...displayPosts.map(
+                      (post) => PostCardWidget(
+                        post: post,
+                        onLike: () => context.read<FeedCubit>().toggleLike(post.id),
+                        onTap: () => context.push('/post-detail/${post.id}'),
+                      ),
+                    ),
                 ],
-
-                // 4. Feed Posts List
-                if (displayPosts.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(40),
-                    child: Center(
-                      child: Column(
-                        children: const [
-                          Icon(Icons.search_off, size: 48, color: AppColors.textMuted),
-                          SizedBox(height: 12),
-                          Text(
-                            'Không tìm thấy bài viết nào phù hợp',
-                            style: TextStyle(color: AppColors.textSecondary),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                else
-                  ...displayPosts.map(
-                    (post) => PostCardWidget(
-                      post: post,
-                      onLike: () => context.read<FeedCubit>().toggleLike(post.id),
-                      onTap: () => context.push('/post-detail/${post.id}'),
-                    ),
-                  ),
-              ],
+              ),
             );
           }
 
