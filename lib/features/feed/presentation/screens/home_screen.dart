@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:alumni_connect/core/theme/app_colors.dart';
 import 'package:alumni_connect/features/feed/presentation/cubit/feed_cubit.dart';
 import 'package:alumni_connect/features/feed/presentation/widgets/stories_carousel_widget.dart';
@@ -10,10 +11,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => FeedCubit()..loadFeed(),
-      child: const _HomeScreenContent(),
-    );
+    return const _HomeScreenContent();
   }
 }
 
@@ -36,7 +34,6 @@ class _HomeScreenContent extends StatelessWidget {
         titleSpacing: 16,
         title: Row(
           children: [
-            // Tri-color FPT emblem icon
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
@@ -72,7 +69,7 @@ class _HomeScreenContent extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.auto_awesome, color: AppColors.fptOrange, size: 22),
-            onPressed: () {},
+            onPressed: () => context.go('/ai-assistant'),
           ),
           Stack(
             children: [
@@ -117,50 +114,53 @@ class _HomeScreenContent extends StatelessWidget {
                 const SizedBox(height: 8),
 
                 // 2. Quick Create Post Box
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const CircleAvatar(
-                            radius: 18,
-                            backgroundImage: NetworkImage(
-                              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF1F5F9),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: const Text(
-                                'Chia sẻ kinh nghiệm hoặc tin tuyển dụng...',
-                                style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+                GestureDetector(
+                  onTap: () => context.push('/create-post'),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const CircleAvatar(
+                              radius: 18,
+                              backgroundImage: NetworkImage(
+                                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildQuickAction(Icons.photo_camera_outlined, 'Ảnh/Video', Colors.green),
-                          _buildQuickAction(Icons.work_outline, 'Referral', AppColors.fptBlue),
-                          _buildQuickAction(Icons.help_outline, 'Hỏi Mentor', AppColors.fptOrange),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF1F5F9),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: const Text(
+                                  'Chia sẻ kinh nghiệm hoặc tin tuyển dụng...',
+                                  style: TextStyle(fontSize: 13, color: AppColors.textMuted),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildQuickAction(Icons.photo_camera_outlined, 'Ảnh/Video', Colors.green),
+                            _buildQuickAction(Icons.work_outline, 'Referral', AppColors.fptBlue),
+                            _buildQuickAction(Icons.help_outline, 'Hỏi Mentor', AppColors.fptOrange),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 14),
@@ -207,6 +207,7 @@ class _HomeScreenContent extends StatelessWidget {
                   (post) => PostCardWidget(
                     post: post,
                     onLike: () => context.read<FeedCubit>().toggleLike(post.id),
+                    onTap: () => context.push('/post-detail/${post.id}'),
                   ),
                 ),
               ],
@@ -217,7 +218,7 @@ class _HomeScreenContent extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => context.push('/create-post'),
         backgroundColor: AppColors.fptOrange,
         foregroundColor: Colors.white,
         shape: const CircleBorder(),
