@@ -12,6 +12,8 @@ import 'package:alumni_connect/features/profile/presentation/screens/edit_profil
 import 'package:alumni_connect/features/jobs/presentation/screens/jobs_screen.dart';
 import 'package:alumni_connect/features/jobs/presentation/screens/job_detail_screen.dart';
 import 'package:alumni_connect/features/ai/presentation/screens/ai_assistant_screen.dart';
+import 'package:alumni_connect/features/chat/presentation/screens/chat_list_screen.dart';
+import 'package:alumni_connect/features/chat/presentation/screens/direct_messages_screen.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -74,6 +76,19 @@ class AppRouter {
       ),
 
       // Standalone Detail Routes
+      GoRoute(
+        path: '/chats',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const ChatListScreen(),
+      ),
+      GoRoute(
+        path: '/chat/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? 'chat_thao';
+          return DirectMessagesScreen(conversationId: id);
+        },
+      ),
       GoRoute(
         path: '/job-detail/:id',
         parentNavigatorKey: _rootNavigatorKey,

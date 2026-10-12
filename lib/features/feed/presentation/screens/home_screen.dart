@@ -68,6 +68,11 @@ class _HomeScreenContent extends StatelessWidget {
             onPressed: () {},
           ),
           IconButton(
+            icon: const Icon(Icons.chat_outlined, size: 22),
+            tooltip: 'Tin nhắn (CH-03)',
+            onPressed: () => context.push('/chats'),
+          ),
+          IconButton(
             icon: const Icon(Icons.auto_awesome, color: AppColors.fptOrange, size: 22),
             onPressed: () => context.go('/ai-assistant'),
           ),
