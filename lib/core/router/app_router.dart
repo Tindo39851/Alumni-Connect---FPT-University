@@ -9,6 +9,8 @@ import 'package:alumni_connect/features/directory/presentation/screens/alumni_pr
 import 'package:alumni_connect/features/mentorship/presentation/screens/booking_screen.dart';
 import 'package:alumni_connect/features/profile/presentation/screens/user_profile_screen.dart';
 import 'package:alumni_connect/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:alumni_connect/features/jobs/presentation/screens/jobs_screen.dart';
+import 'package:alumni_connect/features/jobs/presentation/screens/job_detail_screen.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -40,14 +42,12 @@ class AppRouter {
               ),
             ],
           ),
-          // Tab 3: Jobs
+          // Tab 3: Jobs (Career & OJT Opportunities)
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/jobs',
-                builder: (context, state) => const Scaffold(
-                  body: Center(child: Text('Cơ hội Việc làm & OJT (Tab 3)')),
-                ),
+                builder: (context, state) => const JobsScreen(),
               ),
             ],
           ),
@@ -75,6 +75,14 @@ class AppRouter {
       ),
 
       // Standalone Detail Routes
+      GoRoute(
+        path: '/job-detail/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? 'job_1';
+          return JobDetailScreen(jobId: id);
+        },
+      ),
       GoRoute(
         path: '/post-detail/:id',
         parentNavigatorKey: _rootNavigatorKey,
