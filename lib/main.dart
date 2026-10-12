@@ -4,6 +4,7 @@ import 'package:alumni_connect/core/theme/app_theme.dart';
 import 'package:alumni_connect/core/router/app_router.dart';
 import 'package:alumni_connect/features/feed/presentation/cubit/feed_cubit.dart';
 import 'package:alumni_connect/features/directory/presentation/cubit/directory_cubit.dart';
+import 'package:alumni_connect/features/profile/presentation/cubit/profile_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +23,9 @@ class FptAlumniConnectApp extends StatelessWidget {
         ),
         BlocProvider<DirectoryCubit>(
           create: (_) => DirectoryCubit()..loadDirectory(),
+        ),
+        BlocProvider<ProfileCubit>(
+          create: (_) => ProfileCubit()..loadProfile(),
         ),
       ],
       child: MaterialApp.router(
