@@ -127,20 +127,45 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert, color: AppColors.textSecondary),
                 onSelected: (value) {
-                  if (value == 'report') {
+                  if (value == 'edit') {
+                    _showEditPostDialog(context, post);
+                  } else if (value == 'delete') {
+                    _showDeletePostDialog(context, post.id);
+                  } else if (value == 'report') {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Đã gửi báo cáo vi phạm tới Ban quản trị')),
+                      const SnackBar(content: Text('Đã gửi báo cáo vi phạm tới Ban quản trị (FO-11)')),
                     );
                   }
                 },
                 itemBuilder: (context) => [
                   const PopupMenuItem(
+                    value: 'edit',
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit_outlined, size: 20, color: AppColors.primary),
+                        SizedBox(width: 8),
+                        Text('Chỉnh sửa bài viết (FO-04)'),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_outline, size: 20, color: AppColors.error),
+                        SizedBox(width: 8),
+                        Text('Xóa bài viết (FO-04)', style: TextStyle(color: AppColors.error)),
+                      ],
+                    ),
+                  ),
+                  const PopupMenuDivider(),
+                  const PopupMenuItem(
                     value: 'report',
                     child: Row(
                       children: [
-                        Icon(Icons.flag_outlined, size: 20, color: AppColors.error),
+                        Icon(Icons.flag_outlined, size: 20, color: AppColors.textSecondary),
                         SizedBox(width: 8),
-                        Text('Báo cáo bài viết vi phạm', style: TextStyle(color: AppColors.error)),
+                        Text('Báo cáo vi phạm (FO-11)'),
                       ],
                     ),
                   ),
@@ -761,4 +786,103 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       ),
     );
   }
+
+  void _showDeletePostDialog(BuildContext context, String postId) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Xóa bài viết? (FO-04)'),
+        content: const Text(
+          'Bạn có chắc chắn muốn xóa bài viết này không? Hành động này không thể hoàn tác.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.error,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              context.read<FeedCubit>().deletePost(postId);
+              context.pop(); // Quay lại feed sau khi xóa
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Đã xóa bài viết thành công (FO-04)'),
+                  backgroundColor: AppColors.error,
+                ),
+              );
+            },
+            child: const Text('Xóa'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditPostDialog(BuildContext context, PostItem post) {
+    final titleController = TextEditingController(text: post.title);
+    final contentController = TextEditingController(text: post.content);
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Chỉnh sửa bài viết (FO-04)'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Tiêu đề bài viết',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: contentController,
+                maxLines: 5,
+                decoration: const InputDecoration(
+                  labelText: 'Nội dung chia sẻ',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () {
+              final newTitle = titleController.text.trim();
+              final newContent = contentController.text.trim();
+              if (newContent.isNotEmpty) {
+                context.read<FeedCubit>().editPost(post.id, newTitle, newContent);
+                Navigator.of(ctx).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Đã cập nhật bài viết thành công (FO-04)'),
+                    backgroundColor: AppColors.accent,
+                  ),
+                );
+              }
+            },
+            child: const Text('Lưu thay đổi'),
+          ),
+        ],
+      ),
+    );
+  }
 }
+

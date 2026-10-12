@@ -13,22 +13,40 @@ class FeedLoaded extends FeedState {
   final List<MentorStory> stories;
   final List<PostItem> posts;
   final String selectedCategory;
+  final String searchQuery;
 
   FeedLoaded({
     required this.stories,
     required this.posts,
     required this.selectedCategory,
+    this.searchQuery = '',
   });
+
+  List<PostItem> get filteredPosts {
+    return posts.where((p) {
+      final matchesCategory = selectedCategory == 'Tất cả' ||
+          p.category.toLowerCase().contains(selectedCategory.toLowerCase()) ||
+          p.tags.any((t) => t.toLowerCase().contains(selectedCategory.toLowerCase()));
+      final matchesSearch = searchQuery.isEmpty ||
+          p.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
+          p.content.toLowerCase().contains(searchQuery.toLowerCase()) ||
+          p.tags.any((t) => t.toLowerCase().contains(searchQuery.toLowerCase())) ||
+          p.authorName.toLowerCase().contains(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    }).toList();
+  }
 
   FeedLoaded copyWith({
     List<MentorStory>? stories,
     List<PostItem>? posts,
     String? selectedCategory,
+    String? searchQuery,
   }) {
     return FeedLoaded(
       stories: stories ?? this.stories,
       posts: posts ?? this.posts,
       selectedCategory: selectedCategory ?? this.selectedCategory,
+      searchQuery: searchQuery ?? this.searchQuery,
     );
   }
 }
@@ -125,10 +143,31 @@ class FeedCubit extends Cubit<FeedState> {
     }
   }
 
-  void addNewPost(PostItem newPost) {
+  void searchPosts(String query) {
     if (state is FeedLoaded) {
       final currentState = state as FeedLoaded;
-      emit(currentState.copyWith(posts: [newPost, ...currentState.posts]));
+      emit(currentState.copyWith(searchQuery: query));
+    }
+  }
+
+  void deletePost(String postId) {
+    if (state is FeedLoaded) {
+      final currentState = state as FeedLoaded;
+      final updatedPosts = currentState.posts.where((p) => p.id != postId).toList();
+      emit(currentState.copyWith(posts: updatedPosts));
+    }
+  }
+
+  void editPost(String postId, String newTitle, String newContent) {
+    if (state is FeedLoaded) {
+      final currentState = state as FeedLoaded;
+      final updatedPosts = currentState.posts.map((post) {
+        if (post.id == postId) {
+          return post.copyWith(title: newTitle, content: newContent);
+        }
+        return post;
+      }).toList();
+      emit(currentState.copyWith(posts: updatedPosts));
     }
   }
 }
