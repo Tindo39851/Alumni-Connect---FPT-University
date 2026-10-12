@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alumni_connect/core/theme/app_colors.dart';
 import 'package:alumni_connect/core/theme/app_typography.dart';
+import 'package:alumni_connect/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:alumni_connect/features/profile/presentation/cubit/profile_cubit.dart';
+
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -130,12 +132,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             onPressed: () {
               Navigator.of(ctx).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Đã đăng xuất thành công khỏi hệ thống (US-08)!'),
-                  backgroundColor: AppColors.error,
-                ),
-              );
+              // US-08: real logout — router redirect will navigate to /onboarding
+              context.read<AuthCubit>().logout();
             },
             child: const Text('Đăng xuất'),
           ),

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:alumni_connect/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:alumni_connect/features/auth/presentation/screens/onboarding_screen.dart';
+import 'package:alumni_connect/features/auth/presentation/screens/login_screen.dart';
 import 'package:alumni_connect/features/shared/main_scaffold_wrapper.dart';
 import 'package:alumni_connect/features/feed/presentation/screens/home_screen.dart';
 import 'package:alumni_connect/features/feed/presentation/screens/post_detail_screen.dart';
@@ -19,10 +23,43 @@ import 'package:alumni_connect/features/admin/presentation/screens/admin_dashboa
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
+  // Track login state for redirect logic (US-01, US-02, US-03)
+  static String? _redirectBasedOnAuth(BuildContext context, GoRouterState state) {
+    final authState = context.read<AuthCubit>().state;
+    final isAuthenticated = authState is AuthAuthenticated;
+
+    final publicRoutes = {'/onboarding', '/login'};
+    final isPublicRoute = publicRoutes.contains(state.matchedLocation);
+
+    if (!isAuthenticated && !isPublicRoute) {
+      // Not logged in → go to onboarding
+      return '/onboarding';
+    }
+    if (isAuthenticated && isPublicRoute) {
+      // Already logged in → skip auth screens
+      return '/';
+    }
+    return null; // No redirect needed
+  }
+
   static final router = GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: '/',
+    initialLocation: '/onboarding',
+    redirect: _redirectBasedOnAuth,
     routes: [
+      // ── Auth Routes (US-01, US-02, US-03) ─────────────────────────────────
+      GoRoute(
+        path: '/onboarding',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/login',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const LoginScreen(),
+      ),
+
+      // ── Main App Shell (5 tabs) ────────────────────────────────────────────
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return MainScaffoldWrapper(navigationShell: navigationShell);
@@ -76,14 +113,14 @@ class AppRouter {
         ],
       ),
 
-      // Admin Management Hub Route (AD-01 to AD-08)
+      // ── Admin Management Hub Route (AD-01 to AD-08) ────────────────────────
       GoRoute(
         path: '/admin',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const AdminDashboardScreen(),
       ),
 
-      // Standalone Detail Routes
+      // ── Standalone Detail Routes ───────────────────────────────────────────
       GoRoute(
         path: '/chats',
         parentNavigatorKey: _rootNavigatorKey,
