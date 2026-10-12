@@ -39,7 +39,6 @@ class FeedCubit extends Cubit<FeedState> {
 
   void loadFeed() {
     emit(FeedLoading());
-    // Simulate loading or fetch from repository
     emit(FeedLoaded(
       stories: FeedMockData.mockStories,
       posts: FeedMockData.mockPosts,
@@ -59,31 +58,77 @@ class FeedCubit extends Cubit<FeedState> {
       final currentState = state as FeedLoaded;
       final updatedPosts = currentState.posts.map((post) {
         if (post.id == postId) {
-          return PostItem(
-            id: post.id,
-            authorName: post.authorName,
-            authorRole: post.authorRole,
-            authorAvatar: post.authorAvatar,
-            timeAgo: post.timeAgo,
-            isVerified: post.isVerified,
-            content: post.content,
-            attachmentTitle: post.attachmentTitle,
-            attachmentSubtitle: post.attachmentSubtitle,
-            tags: post.tags,
-            likes: post.likes + 1,
-            comments: post.comments,
-            shares: post.shares,
-            isJobPost: post.isJobPost,
-            jobTitle: post.jobTitle,
-            jobSalary: post.jobSalary,
-            jobPerks: post.jobPerks,
-            companyName: post.companyName,
+          final isLiked = !post.isLiked;
+          return post.copyWith(
+            isLiked: isLiked,
+            likes: isLiked ? post.likes + 1 : (post.likes > 0 ? post.likes - 1 : 0),
           );
         }
         return post;
       }).toList();
 
       emit(currentState.copyWith(posts: updatedPosts));
+    }
+  }
+
+  void toggleSave(String postId) {
+    if (state is FeedLoaded) {
+      final currentState = state as FeedLoaded;
+      final updatedPosts = currentState.posts.map((post) {
+        if (post.id == postId) {
+          return post.copyWith(isSaved: !post.isSaved);
+        }
+        return post;
+      }).toList();
+
+      emit(currentState.copyWith(posts: updatedPosts));
+    }
+  }
+
+  void addComment(String postId, String commentText, {String? parentCommentId}) {
+    if (state is FeedLoaded) {
+      final currentState = state as FeedLoaded;
+      final updatedPosts = currentState.posts.map((post) {
+        if (post.id == postId) {
+          final newComment = CommentItem(
+            id: 'cmt_${DateTime.now().millisecondsSinceEpoch}',
+            authorName: 'Nguyễn Văn An',
+            authorRole: 'Sinh viên K16 • FPT University',
+            authorAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+            timeAgo: 'Vừa xong',
+            content: commentText,
+          );
+
+          List<CommentItem> updatedComments = List.from(post.commentList);
+          if (parentCommentId == null) {
+            updatedComments.insert(0, newComment);
+          } else {
+            updatedComments = updatedComments.map((c) {
+              if (c.id == parentCommentId) {
+                return c.copyWith(
+                  replies: [...c.replies, newComment],
+                );
+              }
+              return c;
+            }).toList();
+          }
+
+          return post.copyWith(
+            commentList: updatedComments,
+            comments: post.comments + 1,
+          );
+        }
+        return post;
+      }).toList();
+
+      emit(currentState.copyWith(posts: updatedPosts));
+    }
+  }
+
+  void addNewPost(PostItem newPost) {
+    if (state is FeedLoaded) {
+      final currentState = state as FeedLoaded;
+      emit(currentState.copyWith(posts: [newPost, ...currentState.posts]));
     }
   }
 }

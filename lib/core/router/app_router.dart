@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:alumni_connect/features/shared/main_scaffold_wrapper.dart';
 import 'package:alumni_connect/features/feed/presentation/screens/home_screen.dart';
+import 'package:alumni_connect/features/feed/presentation/screens/post_detail_screen.dart';
+import 'package:alumni_connect/features/feed/presentation/screens/create_post_screen.dart';
 import 'package:alumni_connect/features/directory/presentation/screens/directory_screen.dart';
 import 'package:alumni_connect/features/directory/presentation/screens/alumni_profile_screen.dart';
 import 'package:alumni_connect/features/mentorship/presentation/screens/booking_screen.dart';
@@ -73,6 +75,19 @@ class AppRouter {
       ),
 
       // Standalone Detail Routes
+      GoRoute(
+        path: '/post-detail/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? 'post_thao';
+          return PostDetailScreen(postId: id);
+        },
+      ),
+      GoRoute(
+        path: '/create-post',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const CreatePostScreen(),
+      ),
       GoRoute(
         path: '/alumni-profile/:id',
         parentNavigatorKey: _rootNavigatorKey,
