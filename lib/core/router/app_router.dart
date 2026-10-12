@@ -14,6 +14,7 @@ import 'package:alumni_connect/features/jobs/presentation/screens/job_detail_scr
 import 'package:alumni_connect/features/ai/presentation/screens/ai_assistant_screen.dart';
 import 'package:alumni_connect/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:alumni_connect/features/chat/presentation/screens/direct_messages_screen.dart';
+import 'package:alumni_connect/features/admin/presentation/screens/admin_dashboard_screen.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -73,6 +74,13 @@ class AppRouter {
             ],
           ),
         ],
+      ),
+
+      // Admin Management Hub Route (AD-01 to AD-08)
+      GoRoute(
+        path: '/admin',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const AdminDashboardScreen(),
       ),
 
       // Standalone Detail Routes
