@@ -53,6 +53,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
             ),
             actions: [
               IconButton(
+                icon: const Icon(Icons.admin_panel_settings_outlined, color: AppColors.secondary),
+                tooltip: 'Trung tâm Quản trị Admin (AD-01 → AD-08)',
+                onPressed: () => context.push('/admin'),
+              ),
+              IconButton(
                 icon: const Icon(Icons.settings_outlined, color: AppColors.textPrimary),
                 tooltip: 'Chỉnh sửa hồ sơ & Cài đặt',
                 onPressed: () => context.push('/edit-profile'),

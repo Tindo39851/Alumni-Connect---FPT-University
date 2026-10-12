@@ -8,6 +8,7 @@ import 'package:alumni_connect/features/profile/presentation/cubit/profile_cubit
 import 'package:alumni_connect/features/jobs/presentation/cubit/jobs_cubit.dart';
 import 'package:alumni_connect/features/ai/presentation/cubit/ai_chat_cubit.dart';
 import 'package:alumni_connect/features/chat/presentation/cubit/chat_cubit.dart';
+import 'package:alumni_connect/features/admin/presentation/cubit/admin_cubit.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +39,9 @@ class FptAlumniConnectApp extends StatelessWidget {
         ),
         BlocProvider<ChatCubit>(
           create: (_) => ChatCubit()..loadChats(),
+        ),
+        BlocProvider<AdminCubit>(
+          create: (_) => AdminCubit()..loadAdminData(),
         ),
       ],
       child: MaterialApp.router(
