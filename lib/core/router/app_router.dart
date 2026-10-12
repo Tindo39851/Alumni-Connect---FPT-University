@@ -11,6 +11,7 @@ import 'package:alumni_connect/features/profile/presentation/screens/user_profil
 import 'package:alumni_connect/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:alumni_connect/features/jobs/presentation/screens/jobs_screen.dart';
 import 'package:alumni_connect/features/jobs/presentation/screens/job_detail_screen.dart';
+import 'package:alumni_connect/features/ai/presentation/screens/ai_assistant_screen.dart';
 
 class AppRouter {
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -51,14 +52,12 @@ class AppRouter {
               ),
             ],
           ),
-          // Tab 4: AI Assistant
+          // Tab 4: AI Assistant (Alumni AI Knowledge Assistant)
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: '/ai-assistant',
-                builder: (context, state) => const Scaffold(
-                  body: Center(child: Text('Alumni AI Assistant (Tab 4)')),
-                ),
+                builder: (context, state) => const AiAssistantScreen(),
               ),
             ],
           ),
